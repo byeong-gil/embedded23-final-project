@@ -13,3 +13,6 @@ sudo python3 raspi-blinka.py
 
 pin connection and above instructions
 https://learn.adafruit.com/adafruit-vl53l1x/python-circuitpython
+
+Example python codes
+https://github.com/adafruit/Adafruit_CircuitPython_VL53L1X/tree/main/examples
