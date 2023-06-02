@@ -22,3 +22,6 @@ https://learn.adafruit.com/circuitpython-essentials/circuitpython-i2c
 
 Using multiple VL53L0X Sensor example
 https://github.com/johnbryanmoore/VL53L0X_rasp_python
+
+Using the second I2C port on Raspberry Pi
+https://woodgears.ca/tech/i2c.html
