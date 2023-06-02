@@ -37,5 +37,6 @@ to check the address of the sensor.
 
 ## Other References
 
-pin connection
+pin connection  
+https://linuxhint.com/gpio-pinout-raspberry-pi/  
 https://learn.adafruit.com/adafruit-vl53l1x/python-circuitpython
