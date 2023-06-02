@@ -16,3 +16,6 @@ https://learn.adafruit.com/adafruit-vl53l1x/python-circuitpython
 
 Example python codes
 https://github.com/adafruit/Adafruit_CircuitPython_VL53L1X/tree/main/examples
+
+busio library example
+https://learn.adafruit.com/circuitpython-essentials/circuitpython-i2c
