@@ -19,3 +19,6 @@ https://github.com/adafruit/Adafruit_CircuitPython_VL53L1X/tree/main/examples
 
 busio library example
 https://learn.adafruit.com/circuitpython-essentials/circuitpython-i2c
+
+Using multiple VL53L0X Sensor example
+https://github.com/johnbryanmoore/VL53L0X_rasp_python
