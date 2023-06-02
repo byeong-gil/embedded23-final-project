@@ -1,0 +1,30 @@
+/**
+*  This test if for controlling a single range sensor
+*/
+target Python
+
+reactor Sensor {
+    preamble {=
+        import sys
+        import signal
+        import time
+        import VL53L1X
+    =}
+
+    timer t(1 msec, 1 msec)
+
+    state tof({=None=})
+    output distance
+
+    reaction (startup) {=
+        self.tof = VL53L1X.VL53L1X(i2c_bus=0, i2c_address=0x29)
+        self.tof.open()
+
+        self.tof.start_ranging(1)
+    =}
+
+    reaction(t) {=
+        distance_in_mm = self.tof.get_distance()
+        print("Distance: {}mm".format(distance_in_mm))
+    =}
+}

@@ -3,6 +3,8 @@
 */
 target Python
 
-main reactor {
+import Sensor from "Sensor.lf"
 
+main reactor {
+    s = new Sensor()
 }
