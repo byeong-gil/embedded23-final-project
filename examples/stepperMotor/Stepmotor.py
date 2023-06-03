@@ -10,7 +10,7 @@ for pin in StepPins:
   GPIO.output(pin,False)
 
 StepCount = 4
-TargetAngle = 1024
+TargetAngle = 530
 
 StepCounter = 0
 StepAccum = 0
@@ -51,10 +51,11 @@ try:
             StepCounter = StepCount
 
         if (StepAccum==TargetAngle):
-            if(direction==1):
-                direction = 0
-            else:
-                direction = 1
+            direction = ~direction
+            # if(direction==1):
+            #     direction = 0
+            # else:
+            #     direction = 1
             time.sleep(0.1)
             StepAccum = 0
         else:

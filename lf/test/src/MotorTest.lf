@@ -3,3 +3,159 @@
  */
  
  target Python
+
+reactor MotorTest {
+    preamble {=
+        import time
+        import RPi.GPIO as GPIO
+        GPIO.setmode(GPIO.BCM)
+    =}
+
+    input result
+
+    state StepCount   (4)
+    state TargetAngle (530)
+    state StepCounter (0)
+    state StepAccum   (0)
+    state Direction   (0)
+
+    state StepPins (12,16,20,21)
+    state Cycle_1  (0,0,0,1)
+    state Cycle_2  (0,0,1,0)
+    state Cycle_3  (0,1,0,0)
+    state Cycle_4  (1,0,0,0)
+
+    # reaction for testing
+    reaction(startup) {=
+        while 1:
+            if Direction == 1: # close the gate
+                for pin in range(0, 4):
+                    xpin = self.StepPins[pin]
+                    if self.StepCounter == 0:
+                        if self.Cycle_1[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)
+                    elif self.StepCounter == 1:
+                        if self.Cycle_2[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)
+                    elif self.StepCounter == 2:
+                        if self.Cycle_3[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)  
+                    elif self.StepCounter == 1:
+                        if self.Cycle_4[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)
+
+            else: # open the gate
+                for pin in range(0, 4):
+                    xpin = self.StepPins[pin]
+                    if self.StepCounter == 0:
+                        if self.Cycle_4[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)
+                    elif self.StepCounter == 1:
+                        if self.Cycle_3[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)
+                    elif self.StepCounter == 2:
+                        if self.Cycle_2[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False)  
+                    elif self.StepCounter == 1:
+                        if self.Cycle_1[pin] != 0:
+                            GPIO.output(xpin, True)
+                        else:
+                            GPIO.output(xpin, False) 
+
+            self.StepCounter += 1
+            self.StepAccum += 1
+
+            if self.StepCounter == self.StepCount:
+                self.StepCounter = 0
+            if self.StepCounter < 0:
+                self.StepCounter = self.StepCount
+            if self.StepAccum == self.TargetAngle:
+                self.Direction = ~self.Direction
+                time.sleep(0.1)
+                self.StepAccum = 0
+            else:
+                time.sleep(0.002)
+
+        except KeyboardInterrupt:
+            GPIO.clenup()
+    =}
+
+    # reaction for actual moving
+    // reaction(result) {=
+    //     while 1:
+    //         if result.value == 0: # close the gate
+    //             for pin in range(0, 4):
+    //                 xpin = self.StepPins[pin]
+    //                 if self.StepCounter == 0:
+    //                     if self.Cycle_1[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)
+    //                 elif self.StepCounter == 1:
+    //                     if self.Cycle_2[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)
+    //                 elif self.StepCounter == 2:
+    //                     if self.Cycle_3[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)  
+    //                 elif self.StepCounter == 1:
+    //                     if self.Cycle_4[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)
+
+    //         else: # open the gate
+    //             for pin in range(0, 4):
+    //                 xpin = self.StepPins[pin]
+    //                 if self.StepCounter == 0:
+    //                     if self.Cycle_4[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)
+    //                 elif self.StepCounter == 1:
+    //                     if self.Cycle_3[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)
+    //                 elif self.StepCounter == 2:
+    //                     if self.Cycle_2[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False)  
+    //                 elif self.StepCounter == 1:
+    //                     if self.Cycle_1[pin] != 0:
+    //                         GPIO.output(xpin, True)
+    //                     else:
+    //                         GPIO.output(xpin, False) 
+
+    //         self.StepCounter += 1
+    //         self.StepAccum += 1
+
+    //         if self.StepCounter == self.StepCount:
+    //             self.StepCounter = 0
+    //         if self.StepCounter < 0:
+    //             self.StepCounter = self.StepCount
+    //         if self.StepAccum == self.TargetAngle:
+    //             self.StepAccum = 0
+    //             break
+    //         else:
+    //             time.sleep(0.002)
+    // =}
+}
