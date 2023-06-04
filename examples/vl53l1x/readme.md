@@ -40,3 +40,6 @@ to check the address of the sensor.
 pin connection  
 https://linuxhint.com/gpio-pinout-raspberry-pi/  
 https://learn.adafruit.com/adafruit-vl53l1x/python-circuitpython
+
+using multi sensor
+https://github.com/johnbryanmoore/VL53L0X_rasp_python
