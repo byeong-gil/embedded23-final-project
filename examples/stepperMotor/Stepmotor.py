@@ -14,7 +14,7 @@ TargetAngle = 530
 
 StepCounter = 0
 StepAccum = 0
-direction = 0
+Direction = 0
 
 Seq_1 = [[0,0,0,1],
          [0,0,1,0],
@@ -27,7 +27,7 @@ Seq_2 = [[1,0,0,0],
          [0,0,0,1]]
 try:
     while 1:
-        if(direction==1):
+        if(Direction == 1):
             for pin in range(0, 4):
                 xpin = StepPins[pin]
                 if Seq_1[StepCounter][pin]!=0:
@@ -45,17 +45,16 @@ try:
         StepCounter += 1
         StepAccum += 1
 
-        if (StepCounter==StepCount):
+        if (StepCounter == StepCount):
             StepCounter = 0
         if (StepCounter<0):
             StepCounter = StepCount
 
-        if (StepAccum==TargetAngle):
-            direction = ~direction
-            # if(direction==1):
-            #     direction = 0
-            # else:
-            #     direction = 1
+        if (StepAccum == TargetAngle):
+            if(Direction == 1):
+                Direction = 0
+            else:
+                Direction = 1
             time.sleep(0.1)
             StepAccum = 0
         else:

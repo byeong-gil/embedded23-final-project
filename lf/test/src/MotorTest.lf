@@ -84,7 +84,10 @@ reactor MotorTest {
             if self.StepCounter < 0:
                 self.StepCounter = self.StepCount
             if self.StepAccum == self.TargetAngle:
-                self.Direction = ~self.Direction
+                if self.Direction == 1:
+                    self.Direction = 0
+                else:
+                    self.Direction = 1
                 time.sleep(0.1)
                 self.StepAccum = 0
             else:
