@@ -2,4 +2,4 @@
 
 ## Execution
 ```
-sudo python3 StepMotor.py
+sudo python3 Stepotor.py
