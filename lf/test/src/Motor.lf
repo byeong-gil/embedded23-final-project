@@ -93,8 +93,8 @@ reactor Motor {
             else:
                 time.sleep(0.002)
 
-        except KeyboardInterrupt:
-            GPIO.clenup()
+        # except KeyboardInterrupt:
+        #     GPIO.clenup()
     =}
 
     # reaction for actual moving
