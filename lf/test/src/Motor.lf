@@ -26,7 +26,12 @@ reactor Motor {
 
     # reaction for testing
     reaction(startup) {=
-        self.GPIO.setmode(GPIO.BCM)
+        self.GPIO.setmode(self.GPIO.BCM)
+        
+        for pin in self.StepPins:
+            self.GPIO.setup(pin,self.GPIO.OUT)
+            self.GPIO.output(pin,False)
+
         while 1:
             if self.Direction == 1: # close the gate
                 for pin in range(0, 4):
