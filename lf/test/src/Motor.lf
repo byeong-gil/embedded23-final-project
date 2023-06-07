@@ -94,8 +94,8 @@ reactor Motor {
                     self.Direction = 0
                 else:
                     self.Direction = 1
-                self.time.sleep(0.5)
                 self.StepAccum = 0
+                self.time.sleep(0.5)
             else:
                 self.time.sleep(0.002)
 
