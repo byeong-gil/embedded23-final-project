@@ -56,7 +56,7 @@ while 1:
 
         while running:
             distance_in_mm = tof.get_distance()
-             print("Distance_1: {}mm".format(distance_in_mm))
+            print("Distance_1: {}mm".format(distance_in_mm))
             time.sleep(0.1)
             count += 1
             if count == limit:
