@@ -37,28 +37,28 @@ reactor Motor {
                 for pin in range(0, 4):
                     xpin = self.StepPins[pin]
                     if self.StepCounter == 0:
-                        if self.Cycle_1[pin] != 0:
+                        if self.Cycle_4[pin] != 0:
                             self.GPIO.output(xpin, True)
                         else:
                             self.GPIO.output(xpin, False)
                     elif self.StepCounter == 1:
-                        if self.Cycle_2[pin] != 0:
+                        if self.Cycle_3[pin] != 0:
                             self.GPIO.output(xpin, True)
                         else:
                             self.GPIO.output(xpin, False)
                     elif self.StepCounter == 2:
-                        if self.Cycle_3[pin] != 0:
+                        if self.Cycle_2[pin] != 0:
                             self.GPIO.output(xpin, True)
                         else:
                             self.GPIO.output(xpin, False)  
-                    elif self.StepCounter == 1:
-                        if self.Cycle_4[pin] != 0:
+                    elif self.StepCounter == 3:
+                        if self.Cycle_1[pin] != 0:
                             self.GPIO.output(xpin, True)
                         else:
                             self.GPIO.output(xpin, False)
 
             else: # open the gate
-                for pin in range(3, -1, -1):
+                for pin in range(0, 4):
                     xpin = self.StepPins[pin]
                     if self.StepCounter == 0:
                         if self.Cycle_1[pin] != 0:
