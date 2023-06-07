@@ -13,7 +13,7 @@ reactor Motor {
     input result
 
     state StepCount   (4)
-    state TargetAngle (530)
+    state TargetAngle (120)
     state StepCounter (0)
     state StepAccum   (0)
     state Direction   (0)
@@ -82,10 +82,11 @@ reactor Motor {
                             self.GPIO.output(xpin, False) 
 
             self.StepCounter += 1
-            self.StepAccum += 1
+            # self.StepAccum += 1
 
             if self.StepCounter == self.StepCount:
                 self.StepCounter = 0
+                self.StepAccum += 1
             if self.StepCounter < 0:
                 self.StepCounter = self.StepCount
             if self.StepAccum == self.TargetAngle:
@@ -93,7 +94,7 @@ reactor Motor {
                     self.Direction = 0
                 else:
                     self.Direction = 1
-                self.time.sleep(0.1)
+                self.time.sleep(0.5)
                 self.StepAccum = 0
             else:
                 self.time.sleep(0.002)

@@ -10,7 +10,7 @@ for pin in StepPins:
   GPIO.output(pin,False)
 
 StepCount = 4
-TargetAngle = 530
+TargetAngle = 526
 
 StepCounter = 0
 StepAccum = 0
