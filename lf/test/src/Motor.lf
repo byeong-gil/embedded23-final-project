@@ -28,7 +28,7 @@ reactor Motor {
     # reaction for testing
     reaction(startup) {=
         while 1:
-            if Direction == 1: # close the gate
+            if self.Direction == 1: # close the gate
                 for pin in range(0, 4):
                     xpin = self.StepPins[pin]
                     if self.StepCounter == 0:
