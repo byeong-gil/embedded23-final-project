@@ -33,7 +33,7 @@ reactor Motor {
             self.GPIO.output(pin,False)
 
         while 1:
-            if self.Direction == 1: # close the gate
+            if self.Direction == 1: # close the gate: Cycle 1 -> 4
                 for pin in range(0, 4):
                     xpin = self.StepPins[pin]
                     if self.StepCounter == 0:
@@ -57,7 +57,7 @@ reactor Motor {
                         else:
                             self.GPIO.output(xpin, False)
 
-            else: # open the gate
+            else: # open the gate: Cycle 4 -> 1
                 for pin in range(0, 4):
                     xpin = self.StepPins[pin]
                     if self.StepCounter == 0:
