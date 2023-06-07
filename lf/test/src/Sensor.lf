@@ -3,12 +3,15 @@
 */
 target Python
 
-reactor Sensor {
+reactor Sensor(i2c_bus_num(1)) {
     preamble {=
         import sys
         import signal
         import time
         import VL53L1X
+        import os
+        def is_i2c_address_0x29:
+            return self.os.system("i2cdetect -y 1 | grep 0x29")
     =}
 
     timer t(1 msec, 1 msec)
@@ -17,8 +20,15 @@ reactor Sensor {
     output distance
 
     reaction (startup) {=
-        self.tof = self.VL53L1X.VL53L1X(i2c_bus=0, i2c_address=0x29)
+        self.tof = self.VL53L1X.VL53L1X(i2c_bus=i2c_bus_num, i2c_address=0x29)
         self.tof.open()
+        if self.i2c_bus_num == 0:
+            if self.is_i2c_address_0x29:
+                # if i2c_bus is 0 and address is 0x29, it shoud be 0x30
+                print("Change i2c_address") 
+                self.tof.change_address(0x30)
+                self.tof.close()
+                self.tof.open()
 
         self.tof.start_ranging(1)
     =}

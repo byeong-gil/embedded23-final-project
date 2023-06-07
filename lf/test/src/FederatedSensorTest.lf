@@ -6,5 +6,6 @@ target Python
 import Sensor from "Sensor.lf"
 
 main reactor {
-    s = new Sensor(i2c_bus_num = 0)
+    s1 = new Sensor(i2c_bus_num = 0)
+    s2 = new Sensor(i2c_bus_num = 1)
 }
