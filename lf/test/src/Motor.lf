@@ -97,7 +97,7 @@ reactor Motor {
                 self.StepAccum = 0
                 self.time.sleep(0.5)
             else:
-                self.time.sleep(0.002)
+                self.time.sleep(0.001)
 
         # except KeyboardInterrupt:
         #     GPIO.clenup()
