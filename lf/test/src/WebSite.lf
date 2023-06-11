@@ -1,0 +1,78 @@
+/**
+ * This code is for testing the connection between a website and a reactor
+ */
+ target Python
+
+reactor WebSite {
+    preamble {=
+        import asyncio
+        import aiohttp
+        from aiohttp import web, WSCloseCode
+        import threading
+        
+        async def http_handler(self, request):
+            return self.web.Response(text="""
+        <html>
+        <head>
+        <script>
+            const webSocket = new WebSocket("ws://localhost:8000/ws");
+            console.log("aaa")
+            webSocket.onmessage = (event) => {
+                console.log(event)
+            }
+            const contactServer = () => {
+                console.log("Send a message");
+                webSocket.send("Initialize");
+            }
+        </script>
+        <body>
+            <h1>
+                <button onclick="contactServer()">Click Here</button>
+            </h1>
+        </body>
+        </head>
+        </html>""",
+        content_type = "text/html")
+        
+        
+        async def websocket_handler(self, request):
+            ws = self.web.WebSocketResponse()
+            await ws.prepare(request)
+        
+            async for msg in ws:
+                print(msg)
+                if msg.type == self.aiohttp.WSMsgType.TEXT:
+                    if msg.data == "close":
+                        await ws.close()
+                    else:
+                        await ws.send_str("some websocket message payload")
+                elif msg.type == self.aiohttp.WSMsgType.ERROR:
+                    print("ws connection closed with exception %s" % ws.exception())
+        
+            return ws
+        
+        
+        def create_runner(self):
+            app = self.web.Application()
+            app.add_routes([
+                self.web.get("/",   self.http_handler),
+                self.web.get("/ws", self.websocket_handler),
+            ])
+            return self.web.AppRunner(app)
+        
+        
+        async def start_server(self, host="localhost", port=8000):
+            runner = self.create_runner()
+            await runner.setup()
+            site = self.web.TCPSite(runner, host, port)
+            await site.start()
+        =}
+
+    //physical action serverRequest
+
+    reaction (startup) {=
+        loop = self.asyncio.get_event_loop()
+        loop.run_until_complete(self.start_server())
+        loop.run_forever()
+    =}
+}
