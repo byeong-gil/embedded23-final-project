@@ -15,7 +15,7 @@ reactor WebSite {
         <html>
         <head>
         <script>
-            const webSocket = new WebSocket("ws://localhost:8000/ws");
+            const webSocket = new WebSocket("ws://138.2.121.46:8000/ws");
             console.log("aaa")
             webSocket.onmessage = (event) => {
                 console.log(event)

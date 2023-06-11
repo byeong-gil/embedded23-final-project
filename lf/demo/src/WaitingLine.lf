@@ -1,54 +1,34 @@
-target C {keepalive: true};
+target Python {keepalive: true};
+
+import Sensor from "./Sensor.lf"
 
 reactor Arbiter {
-    input sensor_1:bool;
-    input sensor_2:bool;
-    input sensor_3:bool;
-    input sensor_4:bool;
-    input control:int;
-    output result:int;
+    input sensor_1;
+    input sensor_2;
+    input control;
+    output result;
 }
 
-reactor Sensor1 {
-    output blocked:bool;
-} 
-
-reactor Sensor2 {
-    output blocked:bool;
-} 
-
-reactor Sensor3 {
-    output blocked:bool;
-} 
-
-reactor Sensor4 {
-    output blocked:bool;
-} 
-
 reactor HTTPServer {
-    input result:int;
-    output control:int;
+    input result;
+    output control;
 } 
 
 reactor StepMotor {
-    input result:int;
+    input result;
 } 
 
 federated reactor WaitingLine{
     A = new Arbiter();
-    S1 = new Sensor1();
-    S2 = new Sensor2();
-    S3 = new Sensor3();
-    S4 = new Sensor4();
+    S1 = new Sensor();
+    S2 = new Sensor();
     H = new HTTPServer();
     SM = new StepMotor();
 
 
     A.result -> H.result;
     A.result -> SM.result;
-    S1.blocked -> A.sensor_1;
-    S2.blocked -> A.sensor_2;
-    S3.blocked -> A.sensor_3;
-    S4.blocked -> A.sensor_4;
+    S1.blocked_with_distance -> A.sensor_1;
+    S2.blocked_with_distance -> A.sensor_2;
     H.control -> A.control;
 }
