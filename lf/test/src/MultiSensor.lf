@@ -1,0 +1,42 @@
+/**
+*  This test if for controlling a single range sensor
+*/
+target Python
+
+reactor Sensor(i2c_bus_num(1)) {
+    preamble {=
+        import sys
+        import signal
+        import time
+        import VL53L1X
+        import os
+        def is_i2c_address_0x29:
+            result = os.popen("i2cdetect -y 1 | grep 0x29")
+            return stream.read() != ""
+    =}
+
+    timer t(1 msec, 1 msec)
+
+    state tof({=None=})
+    output distance
+
+    reaction (startup) {=
+        if self.i2c_bus_num == 0:
+            if self.is_i2c_address_0x29():
+                self.tof = self.VL53L1X.VL53L1X(i2c_bus=i2c_bus_num, i2c_address=0x29)
+                self.tof.open()
+                print("Change i2c_address") 
+                self.tof.change_address(0x30)
+                self.tof.close()
+        else:
+            self.tof = self.VL53L1X.VL53L1X(i2c_bus=i2c_bus_num, i2c_address=0x29)
+
+        self.tof.open()
+        self.tof.start_ranging(1)
+    =}
+
+    reaction(t) {=
+        distance_in_mm = self.tof.get_distance()
+        print("Distance: {}mm".format(distance_in_mm))
+    =}
+}

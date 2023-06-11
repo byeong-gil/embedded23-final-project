@@ -3,38 +3,46 @@
 */
 target Python
 
-reactor Sensor(i2c_bus_num(1)) {
+reactor Sensor(max_length(1360), offset(25 msec), period(25 msec)) {
     preamble {=
         import sys
         import signal
         import time
         import VL53L1X
-        import os
-        def is_i2c_address_0x29:
-            return self.os.system("i2cdetect -y 1 | grep 0x29")
     =}
 
-    timer t(1 msec, 1 msec)
+    timer t(offset, period)
 
     state tof({=None=})
-    output distance
+    state count_blocked(0)
+    state average_distance(0)
 
+    output blocked_with_distance    // A number with non-zero means an obstacle blcked the sensor
+                                    // The number is the distance between this sensor and the obstacle
+                                    // An output with zero means the obstacle has disappeared
     reaction (startup) {=
-        self.tof = self.VL53L1X.VL53L1X(i2c_bus=i2c_bus_num, i2c_address=0x29)
-        self.tof.open()
-        if self.i2c_bus_num == 0:
-            if self.is_i2c_address_0x29:
-                # if i2c_bus is 0 and address is 0x29, it shoud be 0x30
-                print("Change i2c_address") 
-                self.tof.change_address(0x30)
-                self.tof.close()
-                self.tof.open()
+        self.tof = self.VL53L1X.VL53L1X(1, i2c_address=0x29)
 
+        self.tof.open()
         self.tof.start_ranging(1)
     =}
 
-    reaction(t) {=
+    reaction(t) -> blocked_with_distance {=
         distance_in_mm = self.tof.get_distance()
+
+        if distance_in_mm < self.max_length: #self.max_length or max_length?
+            if count_blocked < 4:
+                count_blocked = count_blocked + 1
+                average_distance = (average_distance * (count_blocked - 1) + distance_in_mm) / (count_blocked)
+                if count_blocked == 4:
+                    blocked_with_distance = average_distance
+        else:
+            if count_blocked == 4:
+                blocked_with_distance = 0
+            count_blocked = 0
+            average_distance = 0
+
+
         print("Distance: {}mm".format(distance_in_mm))
     =}
 }
