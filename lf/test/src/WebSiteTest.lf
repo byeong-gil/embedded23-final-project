@@ -8,4 +8,10 @@ import WebSite from "./WebSite.lf"
 
 main reactor {
     w = new WebSite()
+
+    // timer t(1 sec, 1 sec)
+
+    // reaction(t) -> w.number {=
+    //     w.number = 1
+    // =}
 }

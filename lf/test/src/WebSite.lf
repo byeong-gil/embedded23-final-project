@@ -15,24 +15,42 @@ reactor WebSite {
         <html>
         <head>
         <script>
-            const webSocket = new WebSocket("ws://138.2.121.46:8000/ws");
-            console.log("aaa")
+            const webSocket = new WebSocket("ws://localhost:8000/ws");
             webSocket.onmessage = (event) => {
-                console.log(event)
+                var code = document.getElementById("content");
+                var html = code.innerHTML;
+                var newhtml = "<center>" + event.data + "</center>";
+                html = html.replace(html[1], event.data);
+                code.innerHTML = html;
             }
-            const contactServer = () => {
+            const contactServer = (num) => {
                 console.log("Send a message");
-                webSocket.send("Initialize");
+                if (num == 0) {
+                    webSocket.send(1);
+                } else {
+                    webSocket.send(-1)
+                }
             }
         </script>
         <body>
             <h1>
-                <button onclick="contactServer()">Click Here</button>
+                <p, id = "content"> 0 </p>
+                <center><button onclick="contactServer(0)">+</button>
+                <button onclick="contactServer(1)">-</button></center>
             </h1>
         </body>
         </head>
         </html>""",
         content_type = "text/html")
+
+        async def websocket_sender(self, request):
+            ws = self.web.WebSocketResponse()
+            print("1")
+            await ws.prepare(request)
+            print("2")
+            ws.send_str("1")
+        
+            return ws
         
         
         async def websocket_handler(self, request):
@@ -45,7 +63,7 @@ reactor WebSite {
                     if msg.data == "close":
                         await ws.close()
                     else:
-                        await ws.send_str("some websocket message payload")
+                        await ws.send_str("1")
                 elif msg.type == self.aiohttp.WSMsgType.ERROR:
                     print("ws connection closed with exception %s" % ws.exception())
         
@@ -69,10 +87,23 @@ reactor WebSite {
         =}
 
     //physical action serverRequest
+    // input number
+
+    // physical action update
+
+    // output req
+    timer t (1 sec, 1 sec)
+
+    state loop
 
     reaction (startup) {=
         loop = self.asyncio.get_event_loop()
         loop.run_until_complete(self.start_server())
         loop.run_forever()
+    =}
+
+    reaction(t) {=
+        print(0)
+        self.websocket_sender()
     =}
 }
