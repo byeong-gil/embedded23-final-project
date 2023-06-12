@@ -26,20 +26,22 @@ reactor Controller (guide_line(700)){
             if self.state_sensor1 + self.state_sensor2 > self.guide_line:
                 # If the lenght is longer than 700mm (70cm), it means there are two people
                 self.counter += 2
-                result = 2
+                result.set(2)
             else:
                 # Otherwise, there is one people
                 self.counter += 1
-                result = 1
+                result.set(1)
             
             self.state_sensor1 = 0
             self.state_sensor2 = 0
         
         if self.counter <= 0:
-            control_stepper_motor = True
+            control_stepper_motor.set(True)
     =}
 
-    reaction (user_input) {=
+    reaction (user_input) -> control_stepper_motor {=
         self.counter += user_input.value
+        if self.counter > 0:
+            control_stepper_motor.set(False)
     =}
 }
