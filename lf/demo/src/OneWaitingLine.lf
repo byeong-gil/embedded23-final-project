@@ -4,7 +4,8 @@ target Python {
     }
 }
 
-import Sensor from "./Sensor.lf"
+#import Sensor from "./Sensor.lf"
+import Sensor from "../../test/src/Sensor.lf"
 import OneLineController from "./OneLineController.lf"
 import Console from "../../test/src/Console.lf"
 
