@@ -35,18 +35,23 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
                 #When a person is ahead of another person, average distance can be inaccurate
                 self.count_blocked = 1
                 self.average_distance = distance_in_mm
+                print("There is too much difference between previous distances and current distance")
             elif self.count_blocked < 4:
                 self.count_blocked = self.count_blocked + 1
                 self.average_distance = (self.average_distance * (self.count_blocked - 1) + distance_in_mm) / (self.count_blocked)
+                print("average_distance = %d and count_blocked = %d" % (self.average_distance, self.count_blocked))
                 if self.count_blocked == 4:
                     blocked_with_distance.set(self.average_distance)
+                    print("Send output")
+
         else:
             # if self.count_blocked == 4:
             #     self.blocked_with_distance = 0
+            print("Reset state variables")
             self.count_blocked = 0
             self.average_distance = 0
 
 
-        print("Distance: {}mm".format(distance_in_mm))
+        #print("Distance: {}mm".format(distance_in_mm))
     =}
 }
