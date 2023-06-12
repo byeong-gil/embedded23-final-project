@@ -43,6 +43,7 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
                 if self.count_blocked == 4:
                     blocked_with_distance.set(self.average_distance)
                     print("Send output")
+                    self.count_blocked = 0
 
         else:
             # if self.count_blocked == 4:
