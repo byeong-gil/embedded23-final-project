@@ -1,0 +1,37 @@
+/**
+*  This test if for controlling a fast single range sensor
+*/
+target Python
+
+reactor Sensor {
+    preamble {=
+        import time
+        import board
+
+        import adafruit_vl53l1x
+    =}
+
+    timer t(100 msec, 100 msec);
+
+    state i2c({=None=});
+    state vl53({=None=});
+    state id({=None=});
+    state type({=None=});
+    state rev({=None=});
+
+    reaction (startup) {=
+        self.i2c = board.I2C()
+        self.vl53 = adafruit_vl53l1x.VL53L1X(i2c)
+        self.vl53.distance_mode = 1
+        self.vl53.timing_budget = 100
+        self.id, self.type, self.rev = vl53.model_info
+        self.vl53.start_ranging()
+    =}
+
+    reaction(t) {=
+        print(self.counter)
+        self.counter += 1
+        print("Distance: {} cm".format(vl53.distance))
+        self.vl53.clear_interrupt()
+    =}
+}
