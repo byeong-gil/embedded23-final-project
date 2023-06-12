@@ -46,12 +46,12 @@ reactor Console {
 
     reaction(user_input) -> control {=
         self.number = self.number + user_input.value
-        print("%d people can pass" % self.num)
+        print("%d people can pass" % self.number)
         control = user_input.value
     =}
 
     reaction(change) {=
         self.number = self.number - change.value
-        print("%d people can pass" % self.num)
+        print("%d people can pass" % self.number)
     =}
 }
