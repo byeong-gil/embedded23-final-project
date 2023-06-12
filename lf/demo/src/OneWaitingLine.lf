@@ -8,10 +8,15 @@ import Sensor from "./Sensor.lf"
 import OneLineController from "./OneLineController.lf"
 import Console from "../../test/src/Console.lf"
 
-reactor HTTPServer {
-    input result;
-    output control;
-} 
+// reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25 msec)){
+//     timer t(1 sec, 1 sec)
+
+//     output blocked_with_distance
+
+//     reaction (t) -> blocked_with_distance {=
+//         blocked_with_distance.set(100)
+//     =}
+// }
 
 reactor StepMotor {
     input result;
