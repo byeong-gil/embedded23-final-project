@@ -31,7 +31,7 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
         distance_in_mm = self.tof.get_distance()
 
         if distance_in_mm < self.max_length: #self.max_length or max_length?
-            if self.count_blocked != 0 and abs(distance_in_mm - self.average_distance) > max_difference:
+            if self.count_blocked != 0 and abs(distance_in_mm - self.average_distance) > self.max_difference:
                 #When a person is ahead of another person, average distance can be inaccurate
                 self.count_blocked = 1
                 self.average_distance = distance_in_mm
