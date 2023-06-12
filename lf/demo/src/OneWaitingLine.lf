@@ -15,6 +15,10 @@ reactor HTTPServer {
 
 reactor StepMotor {
     input result;
+
+    reaction (result) {=
+        print(result.value)
+    =}
 } 
 
 federated reactor OneWaitingLine at 172.16.161.19 {
