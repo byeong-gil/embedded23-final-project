@@ -35,6 +35,10 @@ sudo i2cdetect -y 1
 ```
 to check the address of the sensor.
 
+## Using 'Adafruit_CircuitPython_VL53L1X' Library with fast_sensor.py
+
+https://github.com/adafruit/Adafruit_CircuitPython_VL53L1X
+
 ## Other References
 
 pin connection  
