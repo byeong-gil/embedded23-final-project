@@ -7,6 +7,10 @@ sudo python3 Stepotor.py
 
 ## Configuration Settings
 
+### Instal Lingua Franca
+
+https://github.com/lf-lang/lingua-franca/releases/tag/v0.4.0
+
 ### Install JDK
 
 https://i5i5.tistory.com/1175
