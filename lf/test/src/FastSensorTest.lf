@@ -3,7 +3,7 @@
 */
 target Python
 
-import Sensor from "Fast_sensor.lf"
+import Sensor from "FastSensor.lf"
 
 main reactor {
     s = new Sensor()

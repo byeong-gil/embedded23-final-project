@@ -3,7 +3,7 @@
 */
 target Python
 
-reactor Sensor {
+reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25 msec)) {
     preamble {=
         import time
         import board
@@ -11,7 +11,7 @@ reactor Sensor {
         import adafruit_vl53l1x
     =}
 
-    timer t(0, 1);
+    timer t(offset, period);
 
     state i2c({=None=});
     state vl53({=None=});
