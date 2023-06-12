@@ -52,6 +52,6 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
             self.average_distance = 0
 
 
-        #print("Distance: {}mm".format(distance_in_mm))
+        print("Distance: {}mm".format(distance_in_mm))
     =}
 }

@@ -26,8 +26,6 @@ reactor Console {
                     action.schedule(0, -1)
     =}
 
-    timer t(0, 1 sec);
-
     input change;    // people passing 
 
     physical action user_input;

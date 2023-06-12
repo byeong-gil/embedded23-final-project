@@ -23,7 +23,7 @@ reactor StepMotor {
 
 federated reactor OneWaitingLine at 172.16.161.19 {
     c = new OneLineController(guide_line = 250);
-    s = new Sensor(max_length = 130, max_difference = 10);
+    s = new Sensor(max_length = 130, max_difference = 50, offset = 100 msec, period = 100 msec);
     //u = new HTTPServer();
     u = new Console();
     sm = new StepMotor();
