@@ -17,10 +17,10 @@ reactor StepMotor {
     input result;
 } 
 
-federated reactor WaitingLine{
-    c = new Controller();
-    s1 = new Sensor();
-    s2 = new Sensor();
+federated reactor WaitingLine at 172.16.161.19 {
+    c = new Controller(guide_line = 250);
+    s1 = new Sensor(max_length = 500);
+    s2 = new Sensor(max_length = 500);
     //u = new HTTPServer();
     u = new Console();
     sm = new StepMotor();
