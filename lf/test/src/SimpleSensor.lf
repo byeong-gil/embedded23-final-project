@@ -29,12 +29,12 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
 
     reaction(t) -> blocked_with_distance {=
         distance_in_mm = self.tof.get_distance()
-        if blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
-                blocked = 1
+        if self.blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
+                self.blocked = 1
                 blocked_with_distance.set(distance_in_mm)
                 print("Send output wiht distance %d" % distance_in_mm)
-        elif blocked == 1 and distance_in_mm >= self.max_length:
-            blocked = 0
+        elif self.blocked == 1 and distance_in_mm >= self.max_length:
+            self.blocked = 0
 
         print("Distance: {}mm".format(distance_in_mm))
     =}
