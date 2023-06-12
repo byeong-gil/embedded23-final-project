@@ -18,6 +18,9 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
     state counter(0);
     state average_distance(0);
 
+    state distance_buffer(0)
+    state blocked(0)
+
     output blocked_with_distance;   // A number with non-zero means an obstacle blcked the sensor
                                     // The number is the distance between this sensor and the obstacle
                                     // An output with zero means the obstacle has disappeared
@@ -27,18 +30,18 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
         self.tof.start_ranging(1)
     =}
 
-    reaction(t) -> blocked_with_distance {=
-    # reaction(t) {=
+    # reaction(t) -> blocked_with_distance {=
+    reaction(t) {=
         print(self.counter)
         self.counter += 1
         distance_in_mm = self.tof.get_distance()
-        if blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
-            blocked = 1
-            blocked_with_distance.set(distance_in_mm)
+        if self.blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
+            self.blocked = 1
+            self.distance_buffer = distance_in_mm
             print("Send output wiht distance %d" % distance_in_mm)
-        elif blocked == 1 and distance_in_mm >= self.max_length:
-            blocked = 0
-
+        elif self.blocked == 1 and distance_in_mm >= self.max_length:
+            self.blocked = 0
+        # blocked_with_distance.set(self.distance_buffer)
         print("Distance: {}mm".format(distance_in_mm))
     =}
 }
