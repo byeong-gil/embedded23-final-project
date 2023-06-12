@@ -17,9 +17,9 @@ reactor Sensor(max_length(1360), offset(25 msec), period(25 msec)) {
     state count_blocked(0)
     state average_distance(0)
 
-    output blocked_with_distance    // An obstacle has blcked the sensor
-                                    // The number of the output means the distance
-                                    // between this sensor and the obstacle
+    output blocked_with_distance    // A number with non-zero means an obstacle blcked the sensor
+                                    // The number is the distance between this sensor and the obstacle
+                                    // An output with zero means the obstacle has disappeared
     reaction (startup) {=
         self.tof = self.VL53L1X.VL53L1X(1, i2c_address=0x29)
 
@@ -31,16 +31,16 @@ reactor Sensor(max_length(1360), offset(25 msec), period(25 msec)) {
         distance_in_mm = self.tof.get_distance()
 
         if distance_in_mm < self.max_length: #self.max_length or max_length?
-            if count_blocked < 4:
-                count_blocked = count_blocked + 1
-                average_distance = (average_distance * (count_blocked - 1) + distance_in_mm) / (count_blocked)
+            if self.count_blocked < 4:
+            self.count_blocked = self.count_blocked + 1
+                self.average_distance = (self.average_distance * (self.count_blocked - 1) + distance_in_mm) / (self.count_blocked)
                 if count_blocked == 4:
-                    blocked_with_distance = average_distance
+                    self.blocked_with_distance = self.average_distance
         else:
-            # if count_blocked == 4:
-            #     blocked_with_distance = 0
-            count_blocked = 0
-            average_distance = 0
+            # if self.count_blocked == 4:
+            #     self.blocked_with_distance = 0
+            self.count_blocked = 0
+            self.average_distance = 0
 
 
         print("Distance: {}mm".format(distance_in_mm))
