@@ -1,13 +1,12 @@
-target Python {keepalive: true};
+target Python {
+    coordination-options: {
+        advance-message-interval: 100 msec
+    }
+}
 
 import Sensor from "./Sensor.lf"
-
-reactor Arbiter {
-    input sensor_1;
-    input sensor_2;
-    input control;
-    output result;
-}
+import Controller from "./Controller.lf"
+import Console from "../../test/src/Console.lf"
 
 reactor HTTPServer {
     input result;
@@ -19,16 +18,17 @@ reactor StepMotor {
 } 
 
 federated reactor WaitingLine{
-    A = new Arbiter();
-    S1 = new Sensor();
-    S2 = new Sensor();
-    H = new HTTPServer();
-    SM = new StepMotor();
+    c = new Controller();
+    s1 = new Sensor();
+    s2 = new Sensor();
+    //u = new HTTPServer();
+    u = new Console();
+    sm = new StepMotor();
 
 
-    A.result -> H.result;
-    A.result -> SM.result;
-    S1.blocked_with_distance -> A.sensor_1;
-    S2.blocked_with_distance -> A.sensor_2;
-    H.control -> A.control;
+    s1.blocked_with_distance -> c.sensor1;
+    s2.blocked_with_distance -> c.sensor2;
+    c.control_stepper_motor -> sm.result;
+    c.result -> u.change;
+    u.control -> c.user_input;
 }

@@ -1,0 +1,45 @@
+target Python
+
+reactor Controller {
+    input sensor1;
+    input sensor2;
+    input user_input;
+
+    state counter(0)
+    state state_sensor1(0)
+    state state_sensor2(0)
+
+    output control_stepper_motor;
+    output result;
+
+    reaction (sensor1) {=
+        self.state_sensor1 = sensor1.value
+    =}
+
+    reaction (sensor2) {=
+        self.state_sensor1 = sensor1.value
+    =}
+
+    reaction (sensor1, sensor2) -> result, control_stepper_motor {=
+        if self.state_sensor1 != 0 and self.state_sensor2 != 0:
+            c.schedule(0)
+            if self.state_sensor1 + self.state_sensor2 > 700:
+                # If the lenght is longer than 700mm (70cm), it means there are two people
+                self.counter += 2
+                result = 2
+            else:
+                # Otherwise, there is one people
+                self.counter += 1
+                result = 1
+            
+            self.state_sensor1 = 0
+            self.state_sensor2 = 0
+        
+        if self.counter <= 0:
+            control_stepper_motor = True
+    =}
+
+    reaction (user_input) {=
+        self.counter += user_input.value
+    =}
+}

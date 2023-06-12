@@ -1,0 +1,57 @@
+/**
+ * This code is for testing the connection between a website and a reactor
+ */
+ target Python
+
+reactor Console {
+    preamble {=
+        import threading
+        def listen_for_input(self):
+            print("***************************************************************")
+            print("Press 'i' and hit return or enter to increase the number")
+            print("Press 'd' and hit return or enter to decrease the number")
+            print("Press 'Control-d' to exit")
+            
+            global action
+            
+            while 1:
+                try:
+                    c = input("> ")
+                except EOFError:
+                    request_stop()
+                    return
+                if c == 'i':
+                    action.schedule(0, 1)
+                elif c == 'd':
+                    action.schedule(0, -1)
+    =}
+
+    timer t(0, 1 sec);
+
+    input change;    // people passing 
+
+    physical action user_input;
+
+    state number(0);
+    
+    output control;  // increase or decrease the allowed number of people passing
+
+    reaction(startup) -> user_input {=
+        global action
+        action = user_input
+        
+        t = self.threading.Thread(target=self.listen_for_input)
+        t.start()
+    =}
+
+    reaction(user_input) -> control {=
+        self.number = self.number + user_input.value
+        print("%d people can pass" % self.num)
+        control = user_input.value
+    =}
+
+    reaction(change) {=
+        self.number = self.number - change.value
+        print("%d people can pass" % self.num)
+    =}
+}
