@@ -8,6 +8,8 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
         import sys
         import signal
         import time
+
+        import VL53L1X
     =}
 
     timer t(offset, period);
@@ -16,28 +18,27 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
     state counter(0);
     state average_distance(0);
 
-    //output blocked_with_distance;    // A number with non-zero means an obstacle blcked the sensor
+    output blocked_with_distance;   // A number with non-zero means an obstacle blcked the sensor
                                     // The number is the distance between this sensor and the obstacle
                                     // An output with zero means the obstacle has disappeared
     reaction (startup) {=
-        #self.tof = self.VL53L1X.VL53L1X(1, i2c_address=0x29)
-
-        #self.tof.open()
-        #self.tof.start_ranging(1)
+        self.tof = self.VL53L1X.VL53L1X(1, i2c_address=0x29)
+        self.tof.open()
+        self.tof.start_ranging(1)
     =}
 
-    //reaction(t) -> blocked_with_distance {=
-    reaction(t) {=
+    reaction(t) -> blocked_with_distance {=
+    # reaction(t) {=
         print(self.counter)
         self.counter += 1
-        #distance_in_mm = self.tof.get_distance()
-        # if self.blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
-        #         self.blocked = 1
-        #         blocked_with_distance.set(distance_in_mm)
-        #         print("Send output wiht distance %d" % distance_in_mm)
-        # elif self.blocked == 1 and distance_in_mm >= self.max_length:
-        #     self.blocked = 0
+        distance_in_mm = self.tof.get_distance()
+        if blocked == 0 and distance_in_mm < self.max_length: #self.max_length or max_length?
+            blocked = 1
+            blocked_with_distance.set(distance_in_mm)
+            print("Send output wiht distance %d" % distance_in_mm)
+        elif blocked == 1 and distance_in_mm >= self.max_length:
+            blocked = 0
 
-        #print("Distance: {}mm".format(distance_in_mm))
+        print("Distance: {}mm".format(distance_in_mm))
     =}
 }
