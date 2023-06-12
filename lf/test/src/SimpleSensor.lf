@@ -19,8 +19,9 @@ reactor Sensor(max_length(1360), max_difference(400), offset(25 msec), period(25
 
             while 1:
                 distance_in_mm = tof.get_distance()
-                if distance_in_mm < self.max_length:
-                    action.schedule(0, distance_in_mm)
+                # if distance_in_mm < self.max_length:
+                #     action.schedule(0, distance_in_mm)
+                action.schedule(0, distance_in_mm)
                 self.time.sleep(0.1)
 
                 
