@@ -3,7 +3,7 @@
 */
 target Python
 
-import Sensor from "Sensor.lf"
+import Sensor from "SimpleSensor.lf"
 
 main reactor {
     s = new Sensor(max_length = 130, max_difference = 50, offset = 100 msec, period = 100 msec)
