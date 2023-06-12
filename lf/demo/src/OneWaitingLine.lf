@@ -1,0 +1,32 @@
+target Python {
+    coordination-options: {
+        advance-message-interval: 100 msec
+    }
+}
+
+import Sensor from "./Sensor.lf"
+import OneLineController from "./OneLineController.lf"
+import Console from "../../test/src/Console.lf"
+
+reactor HTTPServer {
+    input result;
+    output control;
+} 
+
+reactor StepMotor {
+    input result;
+} 
+
+federated reactor OneWaitingLine at 172.16.161.19 {
+    c = new OneLineController(guide_line = 250);
+    s = new Sensor(max_length = 500, max_difference = 30);
+    //u = new HTTPServer();
+    u = new Console();
+    sm = new StepMotor();
+
+
+    s.blocked_with_distance -> c.sensor;
+    c.control_stepper_motor -> sm.result;
+    c.result -> u.change;
+    u.control -> c.user_input;
+}

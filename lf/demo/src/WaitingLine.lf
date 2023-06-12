@@ -23,12 +23,14 @@ federated reactor WaitingLine at 172.16.161.19 {
     s2 = new Sensor(max_length = 500, max_difference = 30);
     //u = new HTTPServer();
     u = new Console();
-    sm = new StepMotor();
+    sm1 = new StepMotor();
+    sm2 = new StepMotor()
 
 
     s1.blocked_with_distance -> c.sensor1;
     s2.blocked_with_distance -> c.sensor2;
-    c.control_stepper_motor -> sm.result;
+    c.control_stepper_motor -> sm1.result;
+    c.control_stepper_motor -> sm2.result;
     c.result -> u.change;
     u.control -> c.user_input;
 }

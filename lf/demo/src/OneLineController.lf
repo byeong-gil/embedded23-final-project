@@ -1,0 +1,28 @@
+target Python
+
+reactor OneLineController (guide_line(700)){
+    input sensor;
+    input user_input;
+
+    state counter(0)
+
+    output control_stepper_motor;
+    output result;
+
+    reaction (sensor) -> result, control_stepper_motor {=
+        if sensor.value != 0:
+            self.counter -= 1
+            result.set(1)
+        
+        if self.counter <= 0:
+            control_stepper_motor.set(True)
+    =}
+
+    reaction (user_input) -> control_stepper_motor {=
+        self.counter += user_input.value
+        if self.counter > 0:
+            control_stepper_motor.set(False)
+        else:
+            control_stepper_motor.set(True)
+    =}
+}
