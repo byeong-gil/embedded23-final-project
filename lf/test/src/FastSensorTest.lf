@@ -1,0 +1,11 @@
+/**
+*  This test if for controlling a single range sensor
+*/
+target Python
+
+import Sensor from "Fast_sensor.lf"
+
+main reactor {
+    s = new Sensor()
+    # s = new Sensor(max_length = 130, max_difference = 50, offset = 100 msec, period = 100 msec)
+}

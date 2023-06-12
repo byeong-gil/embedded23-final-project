@@ -11,7 +11,7 @@ reactor Sensor {
         import adafruit_vl53l1x
     =}
 
-    timer t(50 msec, 50 msec);
+    timer t(0, 1);
 
     state i2c({=None=});
     state vl53({=None=});
