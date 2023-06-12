@@ -34,7 +34,7 @@ reactor Sensor(max_length(1360), offset(25 msec), period(25 msec)) {
             if self.count_blocked < 4:
                 self.count_blocked = self.count_blocked + 1
                 self.average_distance = (self.average_distance * (self.count_blocked - 1) + distance_in_mm) / (self.count_blocked)
-                if count_blocked == 4:
+                if self.count_blocked == 4:
                     self.blocked_with_distance = self.average_distance
         else:
             # if self.count_blocked == 4:
