@@ -1,8 +1,9 @@
 import * as http from "http"
 import { WebSocketServer } from "ws"
+import mqtt from "mqtt"
 
 const clients = [];
-let count = 0;
+let num_people = 0;
 
 
 const options = {};
@@ -51,22 +52,57 @@ const server = http.createServer(options, (req, res) => {
 		res.end();
 	}
 }).listen(8000);
+
+function handleChange(mqtt_client, change) {
+	if (change == 1) {
+		if (num_people == 0) {
+			// Open the door
+			mqtt_client.publish('embed/motor', "1")
+			console.log("publish 1")
+		}
+		num_people += 1
+	} else if (change < 0) {
+		let prev_num_people = num_people
+		num_people += change
+
+		if (prev_num_people > 0 && num_people <= 0) {
+			mqtt_client.publish('embed/motor', "0")
+			console.log("publish 0")
+		}
+	}	
+}
+
+function send_msg(msg) {
+	let wwss
+	for (wwss in clients) {
+		clients[wwss].send(num_people.toString());
+	}
+}
+
 const wss = new WebSocketServer({server});
+const mqtt_client = mqtt.connect('mqtt://test.mosquitto.org')
+
 wss.on("connection", (ws) => {
 	console.log("websocket request");
 	clients.push(ws)
 
 	ws.onmessage = (event) => {
-		console.log(event.data)
+		console.log(Number(event.data))
+		handleChange(mqtt_client, Number(event.data))
+		send_msg(num_people)
 	}
+
+	mqtt_client.on('connect', () => {
+		console.log("mqtt connected")
+	})
 });
 
-let wwss
-setInterval(() => {
-	for (wwss in clients) {
-		console.log(typeof count)
-		clients[wwss].send(count.toString());
-		console.log("send number");
-	}
-	count++;
-}, 1000);
+mqtt_client.subscribe('embed/web')
+
+mqtt_client.on("message", (topic, message, packet) => {
+
+	handleChange(mqtt_client, -Number(message))
+
+	send_msg(num_people)
+
+});
