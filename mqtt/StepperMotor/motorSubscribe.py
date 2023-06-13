@@ -32,7 +32,7 @@ def on_message(client, userdata, msg):
     StepCounter = 0
     StepAccum = 0
 
-    if(msg.payload == 1):
+    if(int(msg.payload) == 1):
         while 1:
             for pin in range(0, 4):
                 xpin = StepPins[pin]
