@@ -22,9 +22,9 @@ client1.connect(broker)                 #establish connection
 
 while 1:
     if(Direction == 1):
-        ret= client1.publish("step",1)   #publish
+        ret= client1.publish("embed/motor",1)   #publish
     else:
-        ret= client1.publish("step",0)   #publish      
+        ret= client1.publish("embed/motor",0)   #publish      
 
     Counter += 1
     Accum += 1

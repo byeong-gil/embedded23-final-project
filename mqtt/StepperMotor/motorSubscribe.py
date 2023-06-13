@@ -81,6 +81,6 @@ client = paho.Client()
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.connect('test.mosquitto.org')
-client.subscribe("step", qos=1)
+client.subscribe("embed/motor", qos=1)
 
 client.loop_forever()
