@@ -13,10 +13,6 @@ for pin in StepPins:
 StepCount = 4
 TargetAngle = 526
 
-StepCounter = 0
-StepAccum = 0
-Direction = 0
-
 Seq_1 = [[0,0,0,1],
          [0,0,1,0],
          [0,1,0,0],
@@ -32,6 +28,9 @@ def on_subscribe(client, userdata, mid, granted_qos):
 
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+
+    StepCounter = 0
+    StepAccum = 0
 
     if(msg.payload == 1):
         while 1:
@@ -82,6 +81,6 @@ client = paho.Client()
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.connect('test.mosquitto.org')
-client.subscribe("hihi", qos=1)
+client.subscribe("step", qos=1)
 
 client.loop_forever()
