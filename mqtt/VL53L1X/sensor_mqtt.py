@@ -4,10 +4,11 @@ import adafruit_vl53l1x
 import paho.mqtt.client as paho
 
 broker="test.mosquitto.org"
-#port=1883
+
 def on_publish(client,userdata,result):             #create function for callback
     print("data published \n")
     pass
+
 client1= paho.Client("sensor1")                           #create client object
 client1.on_publish = on_publish                          #assign function to callback
 client1.connect(broker)                                 #establish connection
@@ -19,29 +20,36 @@ vl53 = adafruit_vl53l1x.VL53L1X(i2c)
 
 # OPTIONAL: can set non-default values
 vl53.distance_mode = 1
-vl53.timing_budget = 100
-
-print("VL53L1X Simple Test.")
-print("--------------------")
-model_id, module_type, mask_rev = vl53.model_info
-print("Model ID: 0x{:0X}".format(model_id))
-print("Module Type: 0x{:0X}".format(module_type))
-print("Mask Revision: 0x{:0X}".format(mask_rev))
-print("Distance Mode: ", end="")
-if vl53.distance_mode == 1:
-    print("SHORT")
-elif vl53.distance_mode == 2:
-    print("LONG")
-else:
-    print("UNKNOWN")
-print("Timing Budget: {}".format(vl53.timing_budget))
-print("--------------------")
+vl53.timing_budget = 33
 
 vl53.start_ranging()
 
-while True:
-    if vl53.data_ready:
-        print("Distance: {} cm".format(vl53.distance))
-        client1.publish("embed/sensor1",vl53.distance)
-        vl53.clear_interrupt()
-        time.sleep(1.0)
+guideline = 100
+max_difference = 30
+threshold = 4
+
+def main():
+    count_blocked = 0
+    count_unblocked = 0
+
+    while True:
+        if vl53.data_ready:
+            #print("Distance: {} cm".format(vl53.distance))
+            if vl53.distance < guideline:
+                count_blocked += 1
+                count_unblocked = 0
+                if count_blocked == threshold:
+                    client1.publish("embed/sensor1",vl53.distance)
+                    count_blocked = 0
+            elif count_blocked != 0:
+                count_unblocked += 1
+                if count_unblocked == 2:
+                    count_blocked = 0
+                    count_unblocked = 0
+
+
+            vl53.clear_interrupt()
+            time.sleep(0.25)
+
+if (__name__ == main):
+    main()
