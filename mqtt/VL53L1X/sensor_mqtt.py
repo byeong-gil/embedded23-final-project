@@ -26,7 +26,7 @@ vl53.start_ranging()
 
 guideline = 100
 max_difference = 30
-threshold = 4
+threshold = 3
 
 def main():
     count_blocked = 0
