@@ -1,0 +1,91 @@
+target TypeScript {
+    //keepalive : true
+    //logging : "debug"
+    //timeout : 10 sec
+};
+reactor HTTPServer{
+    preamble {=
+        import * as https from "https"
+        import * as http from "http"
+        import WebSocket, { WebSocketServer } from "ws"
+    =}
+    input result:boolean
+    
+    state count:number(0);
+    state server:{=http.Server | undefined=}({=undefined=});
+    state client:{=WebSocket=}
+    physical action serverRequest:{= [ http.IncomingMessage, http.ServerResponse ] =};
+    physical action webServerRequest:{= WebSocket =};
+
+    reaction(startup) -> serverRequest, webServerRequest {=
+        let options = {};
+        server = http.createServer(options, (req : http.IncomingMessage, res : http.ServerResponse) => {
+            // Generally browsers make two requests, the first is for favicon.ico.
+            // See https://stackoverflow.com/questions/11961902/nodejs-http-createserver-seems-to-call-twice
+            if (req.url != "/favicon.ico") {
+                actions.serverRequest.schedule(0, [req, res])
+            }
+        }).listen(8000);
+
+        let wss = new WebSocketServer({server});
+
+        wss.on("connection", function (ws:WebSocket) {
+            actions.webServerRequest.schedule(0, ws);
+        })
+    =}
+
+    reaction(result) {=
+        if (result) {
+            count++;
+        } else {
+            count--;
+        }
+
+        if (client !== undefined) {
+            client.send(count.toString());
+        }
+    =}
+
+    reaction(serverRequest) {=
+        let requestArray = serverRequest;
+        if (requestArray) {
+            let req = requestArray[0];
+            let res = requestArray[1];
+
+            res.writeHead(200);
+            res.write(`
+                <html>
+                <head>
+                        <script>
+                        const webSocket = new WebSocket("ws://138.2.121.46:8000");
+                        console.log("aaa")
+                        webSocket.onmessage = (event) => {
+                                var code = document.getElementById("content");
+                                var html = code.innerHTML;
+                                var newhtml = "<center>" + event.data + "</center>";
+                                html = html.replace(html, newhtml);
+                                code.innerHTML = html;
+                        }
+                        </script>
+                        <body>
+                        <h1 style="font-size: 100;", id = "content">
+                                <center> ${count.toString()} </center>
+                        </h1>
+                </body>
+                </head>
+                </html>
+            `);
+            res.end();
+        }
+    =}
+    
+    reaction(webServerRequest) {=
+        client = webServerRequest;
+    =}
+
+    reaction(shutdown) {=
+        if (server) {
+            server.close();
+        }
+    =} 
+}
