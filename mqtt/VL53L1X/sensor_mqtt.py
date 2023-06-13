@@ -35,7 +35,7 @@ def main():
     while True:
         if vl53.data_ready:
             #print("Distance: {} cm".format(vl53.distance))
-            if vl53.distance < guideline:
+            if vl53.distance is not None and  vl53.distance < guideline:
                 count_blocked += 1
                 count_unblocked = 0
                 if count_blocked == threshold:
