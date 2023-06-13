@@ -34,12 +34,12 @@ while 1:
     if (Counter < 0):
         Counter = Count
 
-    if (StepAccum == Target):
+    if (Accum == Target):
         if(Direction == 1):
             Direction = 0
         else:
             Direction = 1
         time.sleep(0.1)
-        StepAccum = 0
+        Accum = 0
     else:
         time.sleep(0.002)
