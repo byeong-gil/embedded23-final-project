@@ -1,3 +1,4 @@
+import paho.mqtt.client as paho
 import time
 import RPi.GPIO as GPIO
 
@@ -25,9 +26,14 @@ Seq_2 = [[1,0,0,0],
          [0,1,0,0],
          [0,0,1,0],
          [0,0,0,1]]
-try:
-    
-    if(Direction == 1):
+
+def on_subscribe(client, userdata, mid, granted_qos):
+    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+
+    if(msg.payload == 1):
         while 1:
             for pin in range(0, 4):
                 xpin = StepPins[pin]
@@ -49,7 +55,6 @@ try:
                 break
             else:
                 time.sleep(0.002)
-
     else:
         while 1:
             for pin in range(0, 4):
@@ -73,5 +78,10 @@ try:
             else:
                 time.sleep(0.002)
 
-except KeyboardInterrupt:
-    GPIO.clenup()
+client = paho.Client()
+client.on_subscribe = on_subscribe
+client.on_message = on_message
+client.connect('test.mosquitto.org')
+client.subscribe("hihi", qos=1)
+
+client.loop_forever()

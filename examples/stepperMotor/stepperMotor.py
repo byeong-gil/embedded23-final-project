@@ -35,7 +35,7 @@ try:
                 else:
                     GPIO.output(xpin, False)
         else:
-             for pin in range(0, 4):
+            for pin in range(0, 4):
                 xpin = StepPins[pin]
                 if Seq_2[StepCounter][pin]!=0:
                     GPIO.output(xpin, True)
