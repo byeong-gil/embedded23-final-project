@@ -9,9 +9,9 @@ def on_publish(client,userdata,result):             #create function for callbac
     print("data published \n")
     pass
 
-client1= paho.Client("sensor1")                           #create client object
-client1.on_publish = on_publish                          #assign function to callback
-client1.connect(broker)                                 #establish connection
+sensor_client= paho.Client("sensor0")                           #create client object
+sensor_client.on_publish = on_publish                          #assign function to callback
+sensor_client.connect(broker)                                 #establish connection
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
@@ -39,7 +39,7 @@ def main():
                 count_blocked += 1
                 count_unblocked = 0
                 if count_blocked == threshold:
-                    client1.publish("embed/sensor1",vl53.distance)
+                    sensor_client.publish("embed/control", "0 " + str(vl53.distance))
                     count_blocked = 0
             elif count_blocked != 0:
                 count_unblocked += 1
@@ -49,7 +49,7 @@ def main():
 
 
             vl53.clear_interrupt()
-            time.sleep(0.25)
+            time.sleep(0.025)
 
 if (__name__ == '__main__'):
     main()
