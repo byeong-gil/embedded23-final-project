@@ -51,5 +51,5 @@ def main():
             vl53.clear_interrupt()
             time.sleep(0.25)
 
-if (__name__ == main):
+if (__name__ == '__main__'):
     main()
