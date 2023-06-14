@@ -56,12 +56,15 @@ def on_message(client, userdata, msg):
 
     publisher_id, data = msg.payload.decode("utf-8").split(' ')
     publisher_id = int(publisher_id)
-    data = float(data)
 
     if publisher_id == 0 or publisher_id == 1:
+        data = float(data)
+        print("Receive %f from %d".format(data, publisher_id))
+
         sensor_state[publisher_id] = data
         distinguish_peoople(client)
     elif publisher_id == 2:
+        data = int(data)
         print("%s from the web" % data)
         handle_change(client, data)
 
