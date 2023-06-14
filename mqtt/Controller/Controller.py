@@ -56,7 +56,7 @@ def on_message(client, userdata, msg):
 
     publisher_id, data = msg.payload.decode("utf-8").split(' ')
     publisher_id = int(publisher_id)
-    data = int(data)
+    data = float(data)
 
     if publisher_id == 0 or publisher_id == 1:
         sensor_state[publisher_id] = data

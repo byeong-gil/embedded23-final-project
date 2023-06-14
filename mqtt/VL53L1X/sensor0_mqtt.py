@@ -39,7 +39,7 @@ def main():
                 count_blocked += 1
                 count_unblocked = 0
                 if count_blocked == threshold:
-                    sensor_client.publish("embed/control", "0 " + str(vl53.distance * 10))
+                    sensor_client.publish("embed/control", "0 " + str(vl53.distance))
                     count_blocked = 0
             elif count_blocked != 0:
                 count_unblocked += 1
