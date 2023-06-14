@@ -24,7 +24,7 @@ vl53.timing_budget = 33
 
 vl53.start_ranging()
 
-guideline = 100
+guideline = 15
 max_difference = 30
 threshold = 3
 
@@ -39,7 +39,7 @@ def main():
                 count_blocked += 1
                 count_unblocked = 0
                 if count_blocked == threshold:
-                    sensor_client.publish("embed/control", "1 " + str(vl53.distance))
+                    sensor_client.publish("embed/control", "1 " + str(vl53.distance * 10))
                     count_blocked = 0
             elif count_blocked != 0:
                 count_unblocked += 1

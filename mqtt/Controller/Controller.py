@@ -3,6 +3,9 @@ import paho.mqtt.client as paho
 available_people = 0
 sensor_state = [0, 0]
 
+##FIXME: Do not close the gate when there is a person!!
+
+
 def handle_change(mqtt_client, change):
     global available_people
     if change == 1:
