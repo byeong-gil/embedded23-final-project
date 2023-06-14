@@ -22,10 +22,10 @@ client1.connect(broker)                 #establish connection
 
 while 1:
     if(Toggle):
-        ret= client1.publish("step",1)   #publish
+        ret= client1.publish("embed/motor", 1)   #publish
         time.sleep(2)
         Toggle = False
     else:
-        ret= client1.publish("step",0)   #publish
+        ret= client1.publish("embed/motor", 0)   #publish
         time.sleep(2)
         Toggle = True
