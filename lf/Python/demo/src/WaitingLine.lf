@@ -5,32 +5,39 @@ target Python {
 }
 
 import Sensor from "./Sensor.lf"
-import Controller from "./Controller.lf"
-import Console from "../../test/src/Console.lf"
+//import Controller from "./Controller.lf"
+
+reactor Controller {
+    input sensor1;
+    input sensor2;
+    input user_input;
+
+    output control_stepper_motor;
+    output num_people;
+}
 
 reactor HTTPServer {
-    input result;
-    output control;
+    input num_people;
+    output user_input;
 } 
 
 reactor StepMotor {
-    input result;
+    input control;
 } 
 
-federated reactor WaitingLine at 172.16.161.19 {
-    c = new Controller(guide_line = 250);
+federated reactor WaitingLine {
+    c = new Controller();
     s1 = new Sensor(max_length = 500, max_difference = 30);
     s2 = new Sensor(max_length = 500, max_difference = 30);
-    //u = new HTTPServer();
-    u = new Console();
+    u = new HTTPServer();
+    //u = new Console();
     sm1 = new StepMotor();
     sm2 = new StepMotor()
 
-
     s1.blocked_with_distance -> c.sensor1;
     s2.blocked_with_distance -> c.sensor2;
-    c.control_stepper_motor -> sm1.result;
-    c.control_stepper_motor -> sm2.result;
-    c.result -> u.change;
-    u.control -> c.user_input;
+    c.control_stepper_motor -> sm1.control;
+    c.control_stepper_motor -> sm2.control;
+    c.num_people -> u.num_people;
+    u.user_input -> c.user_input;
 }
