@@ -26,7 +26,7 @@ def handle_change(mqtt_client, change):
     mqtt_client.publish('embed/web', str(available_people))
     print("send %d to the website" % available_people)
 
-def distinguish_peoople(mqtt_client):
+def distinguish_people(mqtt_client):
     if sensor_state[0] != 0 and sensor_state[1] != 0:
         # The payload between two sensors is 20 cm 
         # The detected length = 20 cm - sensor_state[0] - sensor_state[1]
@@ -62,7 +62,7 @@ def on_message(client, userdata, msg):
         print("Receive %f from %d".format(data, publisher_id))
 
         sensor_state[publisher_id] = data
-        distinguish_peoople(client)
+        distinguish_people(client)
     elif publisher_id == 2:
         data = int(data)
         print("%s from the web" % data)
