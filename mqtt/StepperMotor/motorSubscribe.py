@@ -13,15 +13,15 @@ for pin in StepPins:
 StepCount = 4
 TargetAngle = 526
 
-Seq_1 = [[0,0,0,1],
-         [0,0,1,0],
-         [0,1,0,0],
-         [1,0,0,0]]
-
-Seq_2 = [[1,0,0,0],
+Seq_1 = [[1,0,0,0],
          [0,1,0,0],
          [0,0,1,0],
          [0,0,0,1]]
+
+Seq_2 = [[0,0,0,1],
+         [0,0,1,0],
+         [0,1,0,0],
+         [1,0,0,0]]
 
 def on_subscribe(client, userdata, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
