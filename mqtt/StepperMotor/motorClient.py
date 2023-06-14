@@ -6,7 +6,7 @@ broker="test.mosquitto.org"
 Count = 4
 Target = 526
 
-Direction = 0
+Toggle = True
 Counter = 0
 Accum = 0
 
@@ -21,25 +21,11 @@ client1.on_publish = on_publish         #assign function to callback
 client1.connect(broker)                 #establish connection
 
 while 1:
-    if(Direction == 1):
-        ret= client1.publish("embed/motor",1)   #publish
+    if(Toggle):
+        ret= client1.publish("step",1)   #publish
+        time.sleep(2)
+        Toggle = False
     else:
-        ret= client1.publish("embed/motor",0)   #publish      
-
-    Counter += 1
-    Accum += 1
-
-    if (Counter == Count):
-        Counter = 0
-    if (Counter < 0):
-        Counter = Count
-
-    if (Accum == Target):
-        if(Direction == 1):
-            Direction = 0
-        else:
-            Direction = 1
-        time.sleep(0.1)
-        Accum = 0
-    else:
-        time.sleep(0.002)
+        ret= client1.publish("step",0)   #publish
+        time.sleep(2)
+        Toggle = True
